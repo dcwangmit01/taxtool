@@ -6,6 +6,7 @@ import os
 import re
 import sys
 
+
 @click.command('receipts', short_help='Process directories of receipts')
 @click.argument('path', required=False, type=click.Path(resolve_path=True))
 @click.option('--no-dup-check', is_flag=True, help="skip the duplicate check")
@@ -18,12 +19,14 @@ def cli(ctx, path, no_dup_check):
 
     h = {}
     entries = []
-    
+
     files = os.listdir(path)
     for f in files:
 
         # optional_return, yyyy, mm, dd, dollar, cents, business, description
-        m1 = re.match('^(return)?_?(\d{4})(\d{2})(\d{2})_(\d+)_(\d+)_(\S+?)_(.*)\.(\S+?)$', f)
+        m1 = re.match(
+            '^(return)?_?(\d{4})(\d{2})(\d{2})_(\d+)_(\d+)_(\S+?)_(.*)\.(\S+?)$',
+            f)
 
         if m1 is None:
             print("WARNING: Ignoring file {}", f, file=sys.stderr)
@@ -31,14 +34,14 @@ def cli(ctx, path, no_dup_check):
 
         filename = f
         refund = True if m1.group(1) == "return" else False
-        date = m1.group(3) + "/" +  m1.group(4) + "/" + m1.group(2)
+        date = m1.group(3) + "/" + m1.group(4) + "/" + m1.group(2)
         cost = ("" if refund else "-") + m1.group(5) + "." + m1.group(6)
         business = m1.group(7)
         extension = m1.group(9)
         description = m1.group(8)
         who_paid = ''
         for_whom = ''
-        
+
         if business == '41st':
             m2 = re.match('^(\S+?)_(.*)$', description)
 
@@ -69,8 +72,7 @@ def cli(ctx, path, no_dup_check):
                 'Filename',
                 'Cost',
                 'Who_Paid',
-                'For_Whom',
-                ))
+                'For_Whom', ))
 
         entries.append("{}, {}, {}, {}, {}, {}".format(
             business,
@@ -78,9 +80,8 @@ def cli(ctx, path, no_dup_check):
             f,
             cost,
             who_paid,
-            for_whom,                
-        ))
-                
+            for_whom, ))
+
         # save duplicate indentification info for later
         year_month = m1.group(2) + m1.group(3)
         dollar = m1.group(5)
@@ -95,16 +96,13 @@ def cli(ctx, path, no_dup_check):
                 h[tup] = []
             h[tup] += [filename]
 
-
     # print sorted entries
     for e in sorted(entries):
         print(e)
-    
+
     # print duplicate checks
     if not no_dup_check:
         print("possible dups")
         for tup in h:
             if len(h[tup]) > 1:
                 print("open {}".format(" ".join(h[tup])))
-
-

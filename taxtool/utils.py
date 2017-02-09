@@ -2,18 +2,19 @@ import subprocess
 import re
 import yaml
 
+
 class Utils(object):
     @staticmethod
     def write_string_to_file(s, file):
-        with open (file, "w") as f:
+        with open(file, "w") as f:
             f.write(s)
             f.close()
 
     @staticmethod
     def read_string_from_file(file):
         data = ""
-        with open (file, "r") as f:
-            data=f.read()
+        with open(file, "r") as f:
+            data = f.read()
             f.close()
         return data
 
@@ -35,7 +36,7 @@ class Utils(object):
             #print("executing command[{}]".format(command))
             res = subprocess.check_output(command, shell=True)
 
-            try: # pretty print json if the output happens to be
+            try:  # pretty print json if the output happens to be
                 res = json.dumps(json.loads(res), indent=2, sort_keys=True)
             except Exception as e:
                 pass

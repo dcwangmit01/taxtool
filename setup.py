@@ -12,5 +12,4 @@ setup(
     entry_points='''
         [console_scripts]
         taxtool=taxtool.cli:cli
-    ''',
-)
+    ''', )
