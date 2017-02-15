@@ -65,15 +65,6 @@ def cli(ctx, path, no_dup_check):
             description = m2.group(3)
 
         # stdout csv output
-        if len(entries) == 0:
-            entries.append("{}, {}, {}, {}, {}, {}".format(
-                'Business',
-                'Date',
-                'Filename',
-                'Cost',
-                'Who_Paid',
-                'For_Whom', ))
-
         entries.append("{}, {}, {}, {}, {}, {}".format(
             business,
             date,
@@ -97,6 +88,13 @@ def cli(ctx, path, no_dup_check):
             h[tup] += [filename]
 
     # print sorted entries
+    print("{}, {}, {}, {}, {}, {}".format(
+        'Business',
+        'Date',
+        'Filename',
+        'Cost',
+        'Who_Paid',
+        'For_Whom'))
     for e in sorted(entries):
         print(e)
 
