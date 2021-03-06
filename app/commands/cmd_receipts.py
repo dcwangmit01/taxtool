@@ -1,7 +1,6 @@
 from __future__ import print_function
 import click
-from taxtool.cli import pass_context
-from taxtool.utils import Utils
+from app.cli import pass_context
 import os
 import re
 import sys
@@ -15,7 +14,7 @@ def cli(ctx, path, no_dup_check):
     """Turns a directory listing into a CSV"""
     if path is None:
         path = ctx.home
-    #ctx.log('Reading directory in %s', click.format_filename(path))
+    # ctx.log('Reading directory in %s', click.format_filename(path))
 
     h = {}
     entries = []
@@ -24,9 +23,7 @@ def cli(ctx, path, no_dup_check):
     for f in files:
 
         # optional_return, yyyy, mm, dd, dollar, cents, business, description
-        m1 = re.match(
-            '^(return)?_?(\d{4})(\d{2})(\d{2})_(\d+)_(\d+)_(\S+?)_(.*)\.(\S+?)$',
-            f)
+        m1 = re.match(r'^(return)?_?(\d{4})(\d{2})(\d{2})_(\d+)_(\d+)_(\S+?)_(.*)\.(\S+?)$', f)
 
         if m1 is None:
             print("WARNING: Ignoring file {}", f, file=sys.stderr)
@@ -37,13 +34,13 @@ def cli(ctx, path, no_dup_check):
         date = m1.group(3) + "/" + m1.group(4) + "/" + m1.group(2)
         cost = ("" if refund else "-") + m1.group(5) + "." + m1.group(6)
         business = m1.group(7)
-        extension = m1.group(9)
+        # extension = m1.group(9)
         description = m1.group(8)
         who_paid = ''
         for_whom = ''
 
         if business == '41st':
-            m2 = re.match('^(\S+?)_(.*)$', description)
+            m2 = re.match(r'^(\S+?)_(.*)$', description)
 
             if m2 is None:
                 print("WARNING: Ignoring file {}", f, file=sys.stderr)
@@ -54,7 +51,7 @@ def cli(ctx, path, no_dup_check):
             description = m2.group(2)
 
         if business == '537divis':
-            m2 = re.match('^(\S+?)_(\S+?)_(.*)$', description)
+            m2 = re.match(r'^(\S+?)_(\S+?)_(.*)$', description)
 
             if m2 is None:
                 print("WARNING: Ignoring file {}", f, file=sys.stderr)
@@ -65,18 +62,19 @@ def cli(ctx, path, no_dup_check):
             description = m2.group(3)
 
         # stdout csv output
-        entries.append("{}, {}, {}, {}, {}, {}".format(
+        entries.append(r"{}, {}, {}, {}, {}, {}".format(
             business,
             date,
             f,
             cost,
             who_paid,
-            for_whom, ))
+            for_whom,
+        ))
 
         # save duplicate indentification info for later
         year_month = m1.group(2) + m1.group(3)
         dollar = m1.group(5)
-        cents = m1.group(6)
+        # cents = m1.group(6)
         abs_cost = m1.group(5) + "." + m1.group(6)
 
         # possible duplicate if
@@ -88,13 +86,7 @@ def cli(ctx, path, no_dup_check):
             h[tup] += [filename]
 
     # print sorted entries
-    print("{}, {}, {}, {}, {}, {}".format(
-        'Business',
-        'Date',
-        'Filename',
-        'Cost',
-        'Who_Paid',
-        'For_Whom'))
+    print(r"{}, {}, {}, {}, {}, {}".format('Business', 'Date', 'Filename', 'Cost', 'Who_Paid', 'For_Whom'))
     for e in sorted(entries):
         print(e)
 

@@ -1,5 +1,5 @@
 import click
-from taxtool.cli import pass_context
+from app.cli import pass_context
 
 
 @click.command('status', short_help='Just a placholder')

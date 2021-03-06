@@ -1,3 +1,4 @@
+import json
 import subprocess
 import re
 import yaml
@@ -21,11 +22,11 @@ class Utils(object):
     @staticmethod
     def yaml_dict_write_to_file(dict, file):
         s = yaml.safe_dump(dict, default_flow_style=False)
-        return Util.write_string_to_file(s, file)
+        return Utils.write_string_to_file(s, file)
 
     @staticmethod
     def yaml_dict_read_from_file(file):
-        s = Util.read_string_from_file(file)
+        s = Utils.read_string_from_file(file)
         d = yaml.load(s)
         return d
 
@@ -33,15 +34,15 @@ class Utils(object):
     def exec_command(command):
 
         try:
-            #print("executing command[{}]".format(command))
+            # print("executing command[{}]".format(command))
             res = subprocess.check_output(command, shell=True)
 
             try:  # pretty print json if the output happens to be
                 res = json.dumps(json.loads(res), indent=2, sort_keys=True)
-            except Exception as e:
+            except Exception:
                 pass
 
-            #print("executing command[{}] returned[{}]".format(command, res))
+            # print("executing command[{}] returned[{}]".format(command, res))
             return (res, None)
         except Exception as e:
             return ('<Error>', str(e))

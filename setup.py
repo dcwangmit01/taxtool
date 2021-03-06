@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='taxtool',
     version='0.1.0',
-    packages=['taxtool', 'taxtool.commands'],
+    packages=['app', 'app.commands'],
     include_package_data=True,
     install_requires=[
         'click',
@@ -11,5 +11,6 @@ setup(
     ],
     entry_points='''
         [console_scripts]
-        taxtool=taxtool.cli:cli
-    ''', )
+        taxtool=app.cli:cli
+    ''',
+)
