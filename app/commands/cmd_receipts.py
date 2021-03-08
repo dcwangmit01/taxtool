@@ -71,7 +71,7 @@ def cli(ctx, path, no_dup_check):
                 h[tup] = []
             h[tup] += [row['filename']]
 
-    columns_in_order = ['year', 'business', 'date', 'vendor_description', 'cost', 'paid_for', 'paid_by', 'filename']
+    columns_in_order = ['year', 'business', 'date', 'filename', 'cost', 'paid_by', 'paid_for']
     print(df.to_csv(path_or_buf=None, index=False, columns=columns_in_order))
 
     print_full(df)
